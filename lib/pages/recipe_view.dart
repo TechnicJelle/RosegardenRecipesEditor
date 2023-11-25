@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:reorderables/reorderables.dart";
 
 import "../models/recipe.dart";
@@ -7,17 +8,18 @@ import "../components/add_button.dart";
 import "../components/list_entry.dart";
 import "../components/stats.dart";
 import "../components/tag_chip.dart";
+import "../provider.dart";
 
-class RecipeView extends StatefulWidget {
+class RecipeView extends ConsumerStatefulWidget {
   final Recipe recipe;
 
   const RecipeView({required this.recipe, super.key});
 
   @override
-  State<RecipeView> createState() => _RecipeViewState();
+  ConsumerState<RecipeView> createState() => _RecipeViewState();
 }
 
-class _RecipeViewState extends State<RecipeView> {
+class _RecipeViewState extends ConsumerState<RecipeView> {
   final _scrollController = ScrollController();
 
   @override
@@ -64,6 +66,7 @@ class _RecipeViewState extends State<RecipeView> {
                       trackedList: widget.recipe.ingredients,
                       parentSetState: setState,
                       hintText: "Add ingredient",
+                      focusNode: ref.watch(lastAddedIngredientFocusNodeProvider),
                     );
                   }
 
@@ -74,6 +77,7 @@ class _RecipeViewState extends State<RecipeView> {
                     hintText: "List an ingredient",
                     isOrdered: false,
                     parentSetState: setState,
+                    focusNodeProvider: lastAddedIngredientFocusNodeProvider,
                   );
                 },
               ),
@@ -105,6 +109,7 @@ class _RecipeViewState extends State<RecipeView> {
                       trackedList: widget.recipe.directions,
                       parentSetState: setState,
                       hintText: "Add direction",
+                      focusNode: ref.watch(lastAddedDirectionFocusNodeProvider),
                     );
                   }
 
@@ -115,6 +120,7 @@ class _RecipeViewState extends State<RecipeView> {
                     hintText: "Explain a step of the process",
                     isOrdered: true,
                     parentSetState: setState,
+                    focusNodeProvider: lastAddedDirectionFocusNodeProvider,
                   );
                 },
               ),

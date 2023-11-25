@@ -4,12 +4,14 @@ class MultilineTextField extends StatefulWidget {
   final String hintText;
   final String startText;
   final Function(String) onChanged;
+  final FocusNode? focusNode;
 
   const MultilineTextField({
     super.key,
     required this.hintText,
     required this.startText,
     required this.onChanged,
+    this.focusNode,
   });
 
   @override
@@ -32,6 +34,7 @@ class _MultilineTextFieldState extends State<MultilineTextField> {
       style: Theme.of(context).textTheme.bodyLarge,
       keyboardType: TextInputType.multiline,
       maxLines: null,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: widget.hintText,

@@ -1,13 +1,15 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "multiline_text_field.dart";
 
-class ListEntry extends StatefulWidget {
+class ListEntry extends ConsumerStatefulWidget {
   final int index;
   final List<String> trackedList;
   final String hintText;
   final bool isOrdered;
   final StateSetter parentSetState;
+  final Provider<FocusNode> focusNodeProvider;
 
   const ListEntry({
     super.key,
@@ -16,17 +18,20 @@ class ListEntry extends StatefulWidget {
     required this.hintText,
     required this.isOrdered,
     required this.parentSetState,
+    required this.focusNodeProvider,
   });
 
   @override
-  State<ListEntry> createState() => _ListEntryState();
+  ConsumerState<ListEntry> createState() => _ListEntryState();
 }
 
-class _ListEntryState extends State<ListEntry> {
+class _ListEntryState extends ConsumerState<ListEntry> {
   bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
+    bool lastInList = widget.index == widget.trackedList.length - 1;
+
     return ReorderableDragStartListener(
       index: widget.index,
       child: InkWell(
@@ -47,6 +52,7 @@ class _ListEntryState extends State<ListEntry> {
                     hintText: widget.hintText,
                     startText: widget.trackedList[widget.index],
                     onChanged: (value) => widget.trackedList[widget.index] = value,
+                    focusNode: lastInList ? ref.watch(widget.focusNodeProvider) : null,
                   ),
                 ),
                 const SizedBox(width: 16),
