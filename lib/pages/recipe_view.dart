@@ -141,7 +141,7 @@ class _RecipeViewState extends State<RecipeView> {
                   onChanged: (value) => widget.recipe.recipeSource = value,
                 ),
                 const SizedBox(height: 16),
-                Text("Tags", style: Theme.of(context).textTheme.titleLarge),
+                Text("Tags/Categories", style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 8),
                 ReorderableWrap(
                   buildDraggableFeedback: (context, constraints, child) {
