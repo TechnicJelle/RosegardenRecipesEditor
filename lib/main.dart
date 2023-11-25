@@ -42,7 +42,6 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Directory projectPath = ref.watch(projectPathProvider);
     final Recipe? openRecipe = ref.watch(openRecipeProvider);
-    ref.read(autoSaveRecipe); // This is a hack to make the recipe auto-save when a new recipe is opened
 
     return Scaffold(
       appBar: AppBar(

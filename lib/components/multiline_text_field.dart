@@ -20,6 +20,12 @@ class _MultilineTextFieldState extends State<MultilineTextField> {
   late final TextEditingController _controller = TextEditingController(text: widget.startText);
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
       controller: _controller,

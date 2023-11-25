@@ -21,6 +21,14 @@ class _RecipeViewState extends State<RecipeView> {
   final _scrollController = ScrollController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    widget.recipe.save();
+    print("Auto-saved ${widget.recipe.name}");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16),

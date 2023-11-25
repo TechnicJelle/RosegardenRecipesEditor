@@ -21,6 +21,12 @@ class _TagChipState extends State<TagChip> {
   late final TextEditingController _controller = TextEditingController(text: widget.startText);
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Chip(
       label: IntrinsicWidth(

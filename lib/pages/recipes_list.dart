@@ -19,6 +19,12 @@ class _RecipesListState extends ConsumerState<RecipesList> {
   final _scrollController = ScrollController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Directory projectPath = ref.watch(projectPathProvider);
 
