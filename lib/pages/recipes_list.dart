@@ -69,7 +69,7 @@ class _RecipesListState extends ConsumerState<RecipesList> {
                   itemBuilder: (context, index) {
                     final Directory recipeDir = contents[index];
                     return ListTile(
-                      title: Text(recipeDir.name),
+                      title: Text(recipeDir.name.replaceAll("-", " ").toTitleCase()),
                       onTap: () => ref.read(openRecipeProvider.notifier).state =
                           Recipe.fromFile(File("${recipeDir.path}${Platform.pathSeparator}recipe.md")),
                     );
@@ -96,8 +96,8 @@ class _RecipesListState extends ConsumerState<RecipesList> {
       popped = true;
 
       final Directory projectPath = ref.read(projectPathProvider);
-      newRecipeName = newRecipeName.toTitleCase();
-      final newRecipeDir = Directory("${projectPath.path}${Platform.pathSeparator}$newRecipeName");
+      final String cleanName = cleanRecipeName(newRecipeName);
+      final newRecipeDir = Directory("${projectPath.path}${Platform.pathSeparator}$cleanName");
       newRecipeDir.createSync();
       final File newRecipeFile = File("${newRecipeDir.path}${Platform.pathSeparator}recipe.md");
       final recipe = Recipe.empty(newRecipeFile, newRecipeName)..save();
@@ -119,22 +119,19 @@ class _RecipesListState extends ConsumerState<RecipesList> {
             onChanged: (String value) => newRecipeName = value,
             onFieldSubmitted: (String value) => createNewRecipeAndPop(context),
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (String? value) {
+            validator: (String? recipeName) {
               if (popped) return null;
 
-              if (value == null || value.isEmpty) {
+              if (recipeName == null || recipeName.isEmpty) {
                 return "Recipe name cannot be empty";
               }
 
-              RegExp recipeNameRegex = RegExp(r"^[a-zA-Z ]+$");
-              if (!recipeNameRegex.hasMatch(value)) {
-                return "Invalid recipe name";
-              }
+              final String cleanName = cleanRecipeName(recipeName);
 
               final Directory projectPath = ref.read(projectPathProvider);
               final contents = projectPath.listSync(recursive: false).whereType<Directory>();
 
-              if (contents.any((element) => element.name == value)) {
+              if (contents.any((dir) => dir.name == cleanName)) {
                 return "Recipe already exists";
               }
               return null;
@@ -154,4 +151,17 @@ class _RecipesListState extends ConsumerState<RecipesList> {
       },
     );
   }
+}
+
+String cleanRecipeName(String dirtyRecipeName) {
+  dirtyRecipeName = dirtyRecipeName.trim().toLowerCase();
+  RegExp removeCharsRegex = RegExp(r"[^a-z0-9/ -]");
+  RegExp recipeNameRegex = RegExp(r"[^a-z]");
+  RegExp multipleSpacesRegex = RegExp(r"\s+");
+  return dirtyRecipeName
+      .replaceAll(removeCharsRegex, "")
+      .replaceAll(recipeNameRegex, " ")
+      .replaceAll(multipleSpacesRegex, " ")
+      .trim()
+      .replaceAll(" ", "-");
 }
