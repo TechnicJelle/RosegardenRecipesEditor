@@ -9,29 +9,37 @@ class Stats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Make these editable
     return Wrap(
+      spacing: 16,
+      runSpacing: 16,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text("⏲", style: TextStyle(fontFamily: "NotoEmoji")),
-            Text("Prep time: ${recipe.prepTime} minutes"),
+            Text(" Prep time: ${recipe.prepTime} minutes"),
           ],
         ),
-        const SizedBox(width: 16),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("⏳", style: TextStyle(fontFamily: "NotoEmoji")),
+            Text(" Wait time: ${recipe.waitTime} minutes"),
+          ],
+        ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text("🍳", style: TextStyle(fontFamily: "NotoEmoji")),
-            Text("Cook time: ${recipe.cookTime} minutes"),
+            Text(" Cook time: ${recipe.cookTime} minutes"),
           ],
         ),
-        const SizedBox(width: 16),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text("🍽", style: TextStyle(fontFamily: "NotoEmoji")),
-            Text("Servings: ${recipe.servings}"),
+            Text(" Servings: ${recipe.servings}"),
           ],
         ),
       ],

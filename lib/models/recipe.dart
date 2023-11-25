@@ -7,6 +7,7 @@ class Recipe {
   String name;
   String intro;
   int prepTime;
+  int waitTime;
   int cookTime;
   int servings;
   List<String> ingredients;
@@ -17,6 +18,7 @@ class Recipe {
   Recipe.empty(this.file, this.name)
       : intro = "",
         prepTime = 0,
+        waitTime = 0,
         cookTime = 0,
         servings = 0,
         ingredients = [""],
@@ -29,6 +31,7 @@ class Recipe {
     this.name,
     this.intro,
     this.prepTime,
+    this.waitTime,
     this.cookTime,
     this.servings,
     this.ingredients,
@@ -50,6 +53,9 @@ class Recipe {
 
     int prepTime = extractNumber(contents, "Prep time");
     debugPrint("Prep time:\n$prepTime");
+
+    int waitTime = extractNumber(contents, "Wait time");
+    debugPrint("Wait time:\n$waitTime");
 
     int cookTime = extractNumber(contents, "Cook time");
     debugPrint("Cook time:\n$cookTime");
@@ -83,7 +89,19 @@ class Recipe {
     List<String> tags = tagsContent.split(" ").map((tag) => tag.trim()).where((str) => str.isNotEmpty).toList();
     debugPrint("Tags (${tags.length}):\n$tagsContent");
 
-    return Recipe(file, name, intro, prepTime, cookTime, servings, ingredients, directions, recipeSource, tags);
+    return Recipe(
+      file,
+      name,
+      intro,
+      prepTime,
+      waitTime,
+      cookTime,
+      servings,
+      ingredients,
+      directions,
+      recipeSource,
+      tags,
+    );
   }
 
   void save() {
@@ -99,6 +117,7 @@ class Recipe {
 $intro
 
 - ⏲️ Prep time: $prepTime min
+- ⏲️ Wait time: $waitTime min
 - 🍳 Cook time: $cookTime min
 - 🍽️ Servings: $servings
 

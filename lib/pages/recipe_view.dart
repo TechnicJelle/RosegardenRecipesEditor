@@ -168,6 +168,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                     );
                   },
                   spacing: 8,
+                  runSpacing: 8,
                   onReorder: (int oldIndex, int newIndex) {
                     // Prevent reordering the "Add tag" chip
                     if (oldIndex >= widget.recipe.tags.length || newIndex >= widget.recipe.tags.length) return;
