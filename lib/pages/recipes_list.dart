@@ -50,7 +50,12 @@ class _RecipesListState extends ConsumerState<RecipesList> {
           child: StreamBuilder(
             stream: projectPath.watch(),
             builder: (context, _) {
-              final List<Directory> contents = projectPath.listSync(recursive: false).whereType<Directory>().toList();
+              final List<Directory> contents = projectPath
+                  .listSync(recursive: false)
+                  .whereType<Directory>()
+                  .where((dir) => !dir.name.startsWith(RegExp(r"[!._]")))
+                  .toList();
+
               contents.sort((a, b) => compareNatural(a.name, b.name));
 
               return Scrollbar(
