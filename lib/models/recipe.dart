@@ -93,7 +93,7 @@ class Recipe {
       countedDirections[i] = "${i + 1}. ${countedDirections[i]}";
     }
 
-    file.writeAsStringSync("""
+    String output = """
 # $name
 
 $intro
@@ -116,7 +116,9 @@ $recipeSource
 
 ;tags: ${tags.join(" ")}
 """
-        .trim());
+        .trim();
+
+    file.writeAsStringSync("$output\n");
   }
 }
 
