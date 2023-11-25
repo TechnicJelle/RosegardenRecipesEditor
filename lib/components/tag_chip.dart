@@ -5,12 +5,14 @@ class TagChip extends StatefulWidget {
   final String startText;
   final Function(String) onChanged;
   final VoidCallback onDeleted;
+  final FocusNode? focusNode;
 
   TagChip({
     required this.hintText,
     required this.startText,
     required this.onChanged,
     required this.onDeleted,
+    this.focusNode,
   }) : super(key: UniqueKey());
 
   @override
@@ -34,6 +36,7 @@ class _TagChipState extends State<TagChip> {
           controller: _controller,
           style: Theme.of(context).textTheme.bodyLarge,
           expands: false,
+          focusNode: widget.focusNode,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: widget.hintText,

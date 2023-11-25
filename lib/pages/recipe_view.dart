@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:reorderables/reorderables.dart";
@@ -182,12 +184,18 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                         startText: widget.recipe.tags[i],
                         onChanged: (value) => widget.recipe.tags[i] = value,
                         onDeleted: () => setState(() => widget.recipe.tags.removeAt(i)),
+                        focusNode: i == widget.recipe.tags.length - 1 ? ref.watch(lastAddedTagFocusNodeProvider) : null,
                       ),
-                    Chip(
+                    ActionChip(
                       label: const Text("Add tag"),
-                      deleteIcon: const Icon(Icons.add),
-                      deleteButtonTooltipMessage: "Add tag",
-                      onDeleted: () => setState(() => widget.recipe.tags.add("")),
+                      avatar: const Icon(Icons.add),
+                      tooltip: "Add tag",
+                      onPressed: () {
+                        setState(() => widget.recipe.tags.add(""));
+                        Timer(const Duration(milliseconds: 100), () {
+                          ref.read(lastAddedTagFocusNodeProvider).requestFocus();
+                        });
+                      },
                     ),
                   ],
                 ),

@@ -12,3 +12,4 @@ final openRecipeProvider = StateProvider<Recipe?>((ref) => null);
 
 final lastAddedIngredientFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
 final lastAddedDirectionFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
+final lastAddedTagFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
