@@ -51,15 +51,16 @@ class MyHomePage extends ConsumerWidget {
         actions: [
           const GitRefreshStatus(),
           IconButton(
-            icon: const Icon(Icons.list),
+            icon: const Icon(Icons.upload),
             onPressed: () async {
               showDialog(context: context, builder: (context) => const GitCommitDialog());
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () => openRecipe?.save(),
-          ),
+          if (openRecipe != null)
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () => openRecipe.save(),
+            ),
         ],
       ),
       body: projectPath.path.isEmpty
