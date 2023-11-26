@@ -1,5 +1,5 @@
 name: rosegarden_recipes_editor
-description: A simple editor for the Rosegarden Recipes website
+description: A simple, fool-proof editor for digital recipe books.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -79,9 +79,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: NotoEmoji
-     fonts:
-       - asset: assets/fonts/NotoColorEmoji-Regular.ttf
+    - family: NotoEmoji
+      fonts:
+        - asset: assets/fonts/NotoColorEmoji-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

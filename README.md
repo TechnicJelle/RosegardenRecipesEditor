@@ -1,3 +1,3 @@
 # Rosegarden Recipes Editor
 
-A simple editor for the Rosegarden Recipes website
+A simple, fool-proof editor for digital recipe books.
