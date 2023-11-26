@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
-import "multiline_text_field.dart";
+import "my_text_field.dart";
 
 class ListEntry extends ConsumerStatefulWidget {
   final int index;
@@ -47,36 +47,39 @@ class _ListEntryState extends ConsumerState<ListEntry> {
                 widget.isOrdered ? Text("${widget.index + 1}.") : const Text("- "),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: MultilineTextField(
+                  child: MyTextField(
                     // key: widget.key,
                     hintText: widget.hintText,
                     startText: widget.trackedList[widget.index],
                     onChanged: (value) => widget.trackedList[widget.index] = value,
                     focusNode: lastInList ? ref.watch(widget.focusNodeProvider) : null,
+                    multiline: false,
                   ),
                 ),
                 const SizedBox(width: 16),
               ],
             ),
-            Visibility(
-              visible: _isHovering,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    child: const Icon(Icons.copy),
-                    onTap: () => widget.parentSetState(() {
-                      widget.trackedList.insert(widget.index, widget.trackedList[widget.index]);
-                    }),
-                  ),
-                  InkWell(
-                    onTap: () => widget.parentSetState(() {
-                      widget.trackedList.removeAt(widget.index);
-                    }),
-                    child: const Icon(Icons.delete),
-                  ),
-                  const SizedBox(width: 16),
-                ],
+            ExcludeFocus(
+              child: Visibility(
+                visible: _isHovering,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      child: const Icon(Icons.copy),
+                      onTap: () => widget.parentSetState(() {
+                        widget.trackedList.insert(widget.index, widget.trackedList[widget.index]);
+                      }),
+                    ),
+                    InkWell(
+                      onTap: () => widget.parentSetState(() {
+                        widget.trackedList.removeAt(widget.index);
+                      }),
+                      child: const Icon(Icons.delete),
+                    ),
+                    const SizedBox(width: 16),
+                  ],
+                ),
               ),
             ),
           ],

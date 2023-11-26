@@ -84,7 +84,7 @@ class MyHomePage extends ConsumerWidget {
                   ],
                 ),
                 children: [
-                  const RecipesList(),
+                  const ExcludeFocus(child: RecipesList()),
                   if (openRecipe != null) RecipeView(recipe: openRecipe, key: ValueKey(openRecipe)),
                 ],
               ),

@@ -5,7 +5,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:reorderables/reorderables.dart";
 
 import "../models/recipe.dart";
-import "../components/multiline_text_field.dart";
+import "../components/my_text_field.dart";
 import "../components/add_button.dart";
 import "../components/list_entry.dart";
 import "../components/stats.dart";
@@ -46,7 +46,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
             SliverList.list(
               children: [
                 Text(widget.recipe.name, style: Theme.of(context).textTheme.headlineLarge),
-                MultilineTextField(
+                MyTextField(
                   // key: ValueKey("${widget.recipe.name} description"),
                   hintText: "Enter recipe description here",
                   startText: widget.recipe.intro,
@@ -142,7 +142,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
               children: [
                 const SizedBox(height: 16),
                 Text("Recipe source", style: Theme.of(context).textTheme.titleLarge),
-                MultilineTextField(
+                MyTextField(
                   // key: ValueKey("${widget.recipe.name} recipe source"),
                   hintText: "Where did you find this recipe? How did you create it?",
                   startText: widget.recipe.recipeSource,
