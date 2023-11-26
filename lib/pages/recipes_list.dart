@@ -69,7 +69,7 @@ class _RecipesListState extends ConsumerState<RecipesList> {
                   itemBuilder: (context, index) {
                     final Directory recipeDir = contents[index];
                     return ListTile(
-                      title: Text(recipeDir.name.replaceAll("-", " ").toTitleCase()),
+                      title: Text(prettifyRecipeName(recipeDir.name)),
                       onTap: () => ref.read(openRecipeProvider.notifier).state =
                           Recipe.fromFile(File("${recipeDir.path}${Platform.pathSeparator}recipe.md")),
                     );
@@ -164,4 +164,8 @@ String cleanRecipeName(String dirtyRecipeName) {
       .replaceAll(multipleSpacesRegex, " ")
       .trim()
       .replaceAll(" ", "-");
+}
+
+String prettifyRecipeName(String dirtyRecipeName) {
+  return dirtyRecipeName.replaceAll("-", " ").toTitleCase();
 }

@@ -6,12 +6,14 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:multi_split_view/multi_split_view.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
+import "git/commit_dialog.dart";
+import "git/refresh_status.dart";
 import "models/recipe.dart";
 import "pages/recipe_view.dart";
 import "pages/recipes_list.dart";
-import "tech_app.dart";
 import "prefs.dart";
 import "provider.dart";
+import "tech_app.dart";
 
 void main() async {
   prefs = await SharedPreferences.getInstance();
@@ -47,6 +49,13 @@ class MyHomePage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
+          const GitRefreshStatus(),
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () async {
+              showDialog(context: context, builder: (context) => const GitCommitDialog());
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () => openRecipe?.save(),
