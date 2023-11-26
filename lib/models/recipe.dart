@@ -6,10 +6,10 @@ class Recipe {
   File file;
   String name;
   String intro;
-  int prepTime;
-  int waitTime;
-  int cookTime;
-  int servings;
+  String prepTime;
+  String waitTime;
+  String cookTime;
+  String servings;
   List<String> ingredients;
   List<String> directions;
   String recipeSource;
@@ -17,10 +17,10 @@ class Recipe {
 
   Recipe.empty(this.file, this.name)
       : intro = "",
-        prepTime = 0,
-        waitTime = 0,
-        cookTime = 0,
-        servings = 0,
+        prepTime = "0 minutes",
+        waitTime = "0 minutes",
+        cookTime = "0 minutes",
+        servings = "0",
         ingredients = [""],
         directions = [""],
         recipeSource = "",
@@ -51,16 +51,16 @@ class Recipe {
     String intro = introRegex.firstMatch(contents)?.group(1) ?? "";
     debugPrint("Intro:\n$intro");
 
-    int prepTime = extractNumber(contents, "Prep time");
+    String prepTime = extractProperty(contents, "Prep time");
     debugPrint("Prep time:\n$prepTime");
 
-    int waitTime = extractNumber(contents, "Wait time");
+    String waitTime = extractProperty(contents, "Wait time");
     debugPrint("Wait time:\n$waitTime");
 
-    int cookTime = extractNumber(contents, "Cook time");
+    String cookTime = extractProperty(contents, "Cook time");
     debugPrint("Cook time:\n$cookTime");
 
-    int servings = extractNumber(contents, "Servings");
+    String servings = extractProperty(contents, "Servings");
     debugPrint("Servings:\n$servings");
 
     String ingredientsContent = extractSection(contents, "Ingredients");
@@ -116,9 +116,9 @@ class Recipe {
 
 $intro
 
-- ⏲️ Prep time: $prepTime min
-- ⏲️ Wait time: $waitTime min
-- 🍳 Cook time: $cookTime min
+- ⏲️ Prep time: $prepTime
+- ⏲️ Wait time: $waitTime
+- 🍳 Cook time: $cookTime
 - 🍽️ Servings: $servings
 
 ## Ingredients
@@ -143,11 +143,10 @@ $recipeSource
 
 String extractSection(String contents, String sectionName) {
   RegExp sectionRegex = RegExp(r"## " + sectionName + r"\n+([\S\s]*?)\n+(?:##|;)");
-  // print(sectionRegex.pattern);
   return sectionRegex.firstMatch(contents)?.group(1) ?? "";
 }
 
-int extractNumber(String contents, String sectionName) {
-  RegExp sectionRegex = RegExp(r"- .*? " + sectionName + r": (\d+)");
-  return int.parse(sectionRegex.firstMatch(contents)?.group(1) ?? "0");
+String extractProperty(String contents, String sectionName) {
+  RegExp sectionRegex = RegExp(r"- .{0,3}\s" + sectionName + r": (.+)");
+  return sectionRegex.firstMatch(contents)?.group(1) ?? "-";
 }

@@ -18,21 +18,21 @@ class Stats extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text("⏲", style: TextStyle(fontFamily: "NotoEmoji")),
-            Text(" Prep time: ${recipe.prepTime} minutes"),
+            Text(" Prep time: ${recipe.prepTime}"),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text("⏳", style: TextStyle(fontFamily: "NotoEmoji")),
-            Text(" Wait time: ${recipe.waitTime} minutes"),
+            Text(" Wait time: ${recipe.waitTime}"),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text("🍳", style: TextStyle(fontFamily: "NotoEmoji")),
-            Text(" Cook time: ${recipe.cookTime} minutes"),
+            Text(" Cook time: ${recipe.cookTime}"),
           ],
         ),
         Row(
