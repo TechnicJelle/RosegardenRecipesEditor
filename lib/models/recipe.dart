@@ -47,8 +47,8 @@ class Recipe {
     String name = titleRegex.firstMatch(contents)?.group(1) ?? "";
     debugPrint("Name:\n$name");
 
-    RegExp introRegex = RegExp(r"^# .*?\n+([\S\s]*?)\n+- ⏲️");
-    String intro = introRegex.firstMatch(contents)?.group(1) ?? "";
+    RegExp introRegex = RegExp(r"^# .*?\n+([\S\s]*)- ⏲️ Prep time:");
+    String intro = (introRegex.firstMatch(contents)?.group(1) ?? "").trim();
     debugPrint("Intro:\n$intro");
 
     String prepTime = extractProperty(contents, "Prep time");
