@@ -8,6 +8,8 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "../pages/recipes_list.dart";
 import "../provider.dart";
 
+final gitAnyChangesProvider = StateProvider<bool>((ref) => false);
+
 class GitStatus extends ConsumerStatefulWidget {
   const GitStatus({super.key});
 
@@ -21,30 +23,36 @@ class _GitStatusState extends ConsumerState<GitStatus> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 100), () async => await _updateLog());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateLog());
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool gitAnyChanges = ref.watch(gitAnyChangesProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (var line in log)
-          if (line.startsWith("error: "))
-            Text(line.replaceFirst("error: ", ""), style: const TextStyle(color: Colors.red))
-          else
-            Text(line),
+        if (!gitAnyChanges)
+          const Text("No changes to commit")
+        else
+          for (var line in log)
+            if (line.startsWith("error: "))
+              Text(line.replaceFirst("error: ", ""), style: const TextStyle(color: Colors.red))
+            else
+              Text(line),
       ],
     );
   }
 
   Future<void> _updateLog() async {
+    debugPrint(r"$ git status");
     final Directory projectPath = ref.watch(projectPathProvider);
     List<String> log = [];
 
-    await runProcess("git", ["add", "--all", "--verbose"], projectPath, null); // No need to log this
-    await runProcess("git", ["status", "--porcelain=v1", "--untracked-files=all"], projectPath, log);
+    await _runGitCommand(["add", "--all", "--verbose"], projectPath, null); // No need to log this
+    await _runGitCommand(["status", "--porcelain=v1", "--untracked-files=all"], projectPath, log);
 
     log = log.join("\n").split("\n"); // Split log by line, in case of multiple lines per list item
 
@@ -85,16 +93,17 @@ class _GitStatusState extends ConsumerState<GitStatus> {
     setState(() {
       this.log = log;
     });
+
+    ref.read(gitAnyChangesProvider.notifier).state = log.isNotEmpty;
   }
 }
 
-Future<void> runProcess(
-  String executableName,
+Future<void> _runGitCommand(
   List<String> arguments,
   Directory workingDirectory,
   List<String>? log,
 ) async {
-  var process = await Process.start(executableName, arguments, workingDirectory: workingDirectory.path);
+  var process = await Process.start("git", arguments, workingDirectory: workingDirectory.path);
 
   var stdout = process.stdout.transform(utf8.decoder).listen((String data) {
     log?.add(data.trimRight());
