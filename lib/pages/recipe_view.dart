@@ -4,12 +4,12 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:reorderables/reorderables.dart";
 
-import "../models/recipe.dart";
-import "../components/my_text_field.dart";
 import "../components/add_button.dart";
 import "../components/list_entry.dart";
+import "../components/my_text_field.dart";
 import "../components/stats.dart";
 import "../components/tag_chip.dart";
+import "../models/recipe.dart";
 import "../provider.dart";
 
 class RecipeView extends ConsumerStatefulWidget {
@@ -25,11 +25,20 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
   final _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(seconds: 15), (timer) {
+      widget.recipe.save();
+      debugPrint("Auto-saved ${widget.recipe.name} every 15 seconds");
+    });
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
     widget.recipe.save();
-    print("Auto-saved ${widget.recipe.name}");
+    debugPrint("Auto-saved ${widget.recipe.name} on close");
   }
 
   @override
