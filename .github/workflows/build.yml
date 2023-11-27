@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4.1.1
 
       - name: Install system dependencies
-        run: sudo apt install cmake ninja
+        run: sudo apt install clang cmake ninja pkg-config
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
