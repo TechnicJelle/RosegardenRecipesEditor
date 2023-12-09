@@ -39,8 +39,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
     super.dispose();
     autoSaveTimer.cancel();
     _scrollController.dispose();
-    widget.recipe.save();
-    debugPrint("Auto-saved ${widget.recipe.name} on close");
+    widget.recipe.save(autoSave: true, "close");
   }
 
   @override

@@ -59,7 +59,7 @@ class MyHomePage extends ConsumerWidget {
           if (openRecipe != null)
             IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () => openRecipe.save(),
+              onPressed: () => openRecipe.save(autoSave: false, "save button clicked"),
             ),
         ],
       ),
