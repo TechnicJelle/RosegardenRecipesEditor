@@ -26,6 +26,7 @@ void main() async {
   await WindowManager.instance.ensureInitialized();
   windowManager.waitUntilReadyToShow().then((_) async {
     await windowManager.setTitle("$appTitle ($commit)");
+    await windowManager.maximize();
   });
 
   runApp(const ProviderScope(child: MyApp()));
