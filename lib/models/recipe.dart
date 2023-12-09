@@ -40,31 +40,33 @@ class Recipe {
     this.tags,
   );
 
+  static const bool fromFileDebugPrint = false;
+
   static Recipe fromFile(File file) {
     final String contents = file.readAsStringSync();
 
     RegExp titleRegex = RegExp(r"^# (.+)$", multiLine: true);
     String name = titleRegex.firstMatch(contents)?.group(1) ?? "";
-    debugPrint("Name:\n$name");
+    if (fromFileDebugPrint) debugPrint("Name:\n$name");
 
     RegExp introRegex = RegExp(r"^# .*?\n+([\S\s]*)- ⏲️ Prep time:");
     String intro = (introRegex.firstMatch(contents)?.group(1) ?? "").trim();
-    debugPrint("Intro:\n$intro");
+    if (fromFileDebugPrint) debugPrint("Intro:\n$intro");
 
     String prepTime = extractProperty(contents, "Prep time");
-    debugPrint("Prep time:\n$prepTime");
+    if (fromFileDebugPrint) debugPrint("Prep time:\n$prepTime");
 
     String waitTime = extractProperty(contents, "Wait time");
-    debugPrint("Wait time:\n$waitTime");
+    if (fromFileDebugPrint) debugPrint("Wait time:\n$waitTime");
 
     String cookTime = extractProperty(contents, "Cook time");
-    debugPrint("Cook time:\n$cookTime");
+    if (fromFileDebugPrint) debugPrint("Cook time:\n$cookTime");
 
     String servings = extractProperty(contents, "Servings");
-    debugPrint("Servings:\n$servings");
+    if (fromFileDebugPrint) debugPrint("Servings:\n$servings");
 
     String ingredientsContent = extractSection(contents, "Ingredients");
-    debugPrint("Ingredients:\n$ingredientsContent");
+    if (fromFileDebugPrint) debugPrint("Ingredients:\n$ingredientsContent");
     List<String> ingredients = ingredientsContent.split(RegExp(r"\n*- ")).toList();
     ingredients.removeAt(0); // Remove the empty string at the beginning
     final RegExp ingredientsRegex = RegExp(r"^- ");
@@ -73,7 +75,7 @@ class Recipe {
     }
 
     String directionsContent = extractSection(contents, "Directions");
-    debugPrint("Directions:\n$directionsContent");
+    if (fromFileDebugPrint) debugPrint("Directions:\n$directionsContent");
     List<String> directions = directionsContent.split(RegExp(r"\n*\d+\. ")).toList();
     directions.removeAt(0); // Remove the empty string at the beginning
     final RegExp directionsRegex = RegExp(r"^\d+\. ");
@@ -82,12 +84,12 @@ class Recipe {
     }
 
     String recipeSource = extractSection(contents, "Recipe source");
-    debugPrint("Recipe Source:\n$recipeSource");
+    if (fromFileDebugPrint) debugPrint("Recipe Source:\n$recipeSource");
 
     RegExp tagsRegex = RegExp(r";tags: (.+)");
     String tagsContent = tagsRegex.firstMatch(contents)?.group(1) ?? "";
     List<String> tags = tagsContent.split(" ").map((tag) => tag.trim()).where((str) => str.isNotEmpty).toList();
-    debugPrint("Tags (${tags.length}):\n$tagsContent");
+    if (fromFileDebugPrint) debugPrint("Tags (${tags.length}):\n$tagsContent");
 
     return Recipe(
       file,
