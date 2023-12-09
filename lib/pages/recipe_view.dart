@@ -23,19 +23,21 @@ class RecipeView extends ConsumerStatefulWidget {
 
 class _RecipeViewState extends ConsumerState<RecipeView> {
   final _scrollController = ScrollController();
+  late final Timer autoSaveTimer;
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 15), (timer) {
-      widget.recipe.save();
-      debugPrint("Auto-saved ${widget.recipe.name} every 15 seconds");
+    const int seconds = 15;
+    autoSaveTimer = Timer.periodic(const Duration(seconds: seconds), (timer) {
+      widget.recipe.save(autoSave: true, "timer $seconds seconds");
     });
   }
 
   @override
   void dispose() {
     super.dispose();
+    autoSaveTimer.cancel();
     _scrollController.dispose();
     widget.recipe.save();
     debugPrint("Auto-saved ${widget.recipe.name} on close");
