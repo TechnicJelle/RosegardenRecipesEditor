@@ -15,7 +15,6 @@ jobs:
 
       - name: Set GitHub Environment Variables
         run: |
-          echo "GITHUB_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
           echo "GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Install system dependencies
@@ -51,8 +50,7 @@ jobs:
 
       - name: Set GitHub Environment Variables
         run: |
-          echo "GITHUB_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
-          echo "GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          Add-Content -Path $GITHUB_ENV -Value "`$GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)" 
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
