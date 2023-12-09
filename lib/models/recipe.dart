@@ -104,7 +104,12 @@ class Recipe {
     );
   }
 
-  void save() {
+  void save(String reason, {required bool autoSave}) {
+    if (autoSave) {
+      debugPrint("Auto-saving \"$name\" because $reason");
+    } else {
+      debugPrint("Saving \"$name\" because $reason");
+    }
     var countedIngredients = ingredients.map((ingredient) => "- $ingredient");
     var countedDirections = List<String>.from(directions);
     for (int i = 0; i < countedDirections.length; i++) {
