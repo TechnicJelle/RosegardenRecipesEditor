@@ -42,7 +42,12 @@ class Recipe {
 
   static const bool fromFileDebugPrint = false;
 
-  static Recipe fromFile(File file) {
+  static Recipe fromDirectory(Directory directory) {
+    final file = File("${directory.path}${Platform.pathSeparator}recipe.md");
+    return _fromFile(file);
+  }
+
+  static Recipe _fromFile(File file) {
     final String contents = file.readAsStringSync();
 
     RegExp titleRegex = RegExp(r"^# (.+)$", multiLine: true);

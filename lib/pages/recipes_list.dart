@@ -70,8 +70,8 @@ class _RecipesListState extends ConsumerState<RecipesList> {
                     final Directory recipeDir = contents[index];
                     return ListTile(
                       title: Text(prettifyRecipeName(recipeDir.name)),
-                      onTap: () => ref.read(openRecipeProvider.notifier).state =
-                          Recipe.fromFile(File("${recipeDir.path}${Platform.pathSeparator}recipe.md")),
+                      onTap: () => ref.read(openRecipeProvider.notifier).state = Recipe.fromDirectory(recipeDir),
+                      selected: ref.watch(openRecipeProvider)?.file.parent.path == recipeDir.path,
                     );
                   },
                 ),
