@@ -47,7 +47,6 @@ class _GitStatusState extends ConsumerState<GitStatus> {
   }
 
   Future<void> _updateLog() async {
-    debugPrint(r"$ git status");
     final Directory projectPath = ref.watch(projectPathProvider);
     List<String> log = [];
 
@@ -103,6 +102,7 @@ Future<void> _runGitCommand(
   Directory workingDirectory,
   List<String>? log,
 ) async {
+  print("\$ git ${arguments.join(" ")}");
   var process = await Process.start("git", arguments, workingDirectory: workingDirectory.path);
 
   var stdout = process.stdout.transform(utf8.decoder).listen((String data) {
