@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
+import "../models/recipe.dart";
+import "../provider.dart";
 import "push_dialog.dart";
 import "status.dart";
 
@@ -16,6 +18,17 @@ class _GitCommitDialogState extends ConsumerState<GitCommitDialog> {
   final _formKey = GlobalKey<FormState>();
   final _commitMessageController = TextEditingController();
   final _commitDescriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // If there is a recipe open, save it before committing, to ensure the commit is up-to-date
+    Recipe? recipe = ref.read(openRecipeProvider);
+    if (recipe != null) {
+      recipe.save(autoSave: true, "before committing");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
