@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:multi_split_view/multi_split_view.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import "package:window_manager/window_manager.dart";
 
 import "git/commit_dialog.dart";
 import "git/refresh_status.dart";
@@ -15,8 +16,18 @@ import "prefs.dart";
 import "provider.dart";
 import "tech_app.dart";
 
+const String appTitle = "Rosegarden Recipes Editor";
+const String commit = String.fromEnvironment("commit", defaultValue: "local");
+
 void main() async {
   prefs = await SharedPreferences.getInstance();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await WindowManager.instance.ensureInitialized();
+  windowManager.waitUntilReadyToShow().then((_) async {
+    await windowManager.setTitle("$appTitle ($commit)");
+  });
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -26,11 +37,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TechApp(
-      title: "Rosegarden Recipes Editor",
+      title: appTitle,
       primary: Colors.green,
       secondary: Colors.lightGreen,
       themeMode: ThemeMode.light,
-      home: const MyHomePage(title: "Rosegarden Recipes Editor"),
+      home: const MyHomePage(title: appTitle),
     );
   }
 }
