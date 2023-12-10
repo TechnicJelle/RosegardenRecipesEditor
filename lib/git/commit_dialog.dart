@@ -26,7 +26,7 @@ class _GitCommitDialogState extends ConsumerState<GitCommitDialog> {
     // If there is a recipe open, save it before committing, to ensure the commit is up-to-date
     Recipe? recipe = ref.read(openRecipeProvider);
     if (recipe != null) {
-      recipe.save(autoSave: true, "before committing");
+      recipe.save(isAutoSave: true, reason: "before committing");
     }
   }
 

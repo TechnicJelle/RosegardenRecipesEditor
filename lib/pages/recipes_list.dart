@@ -100,7 +100,7 @@ class _RecipesListState extends ConsumerState<RecipesList> {
       final newRecipeDir = Directory("${projectPath.path}${Platform.pathSeparator}$cleanName");
       newRecipeDir.createSync();
       final File newRecipeFile = File("${newRecipeDir.path}${Platform.pathSeparator}recipe.md");
-      final recipe = Recipe.empty(newRecipeFile, newRecipeName)..save(autoSave: false, "new recipe");
+      final recipe = Recipe.empty(newRecipeFile, newRecipeName)..save(isAutoSave: false, reason: "new recipe");
 
       ref.read(openRecipeProvider.notifier).state = recipe;
     }

@@ -35,7 +35,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
 
     const int seconds = 15;
     autoSaveTimer = Timer.periodic(const Duration(seconds: seconds), (timer) {
-      recipe.save(autoSave: true, "timer $seconds seconds");
+      recipe.save(isAutoSave: true, reason: "timer $seconds seconds");
     });
   }
 
@@ -44,7 +44,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
     super.dispose();
     autoSaveTimer.cancel();
     _scrollController.dispose();
-    recipe.save(autoSave: true, "close");
+    recipe.save(isAutoSave: true, reason: "close");
   }
 
   @override

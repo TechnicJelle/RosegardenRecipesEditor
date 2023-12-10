@@ -138,8 +138,8 @@ class Recipe {
     );
   }
 
-  void save(String reason, {required bool autoSave}) {
-    if (autoSave) {
+  void save({required bool isAutoSave, required String reason}) {
+    if (isAutoSave) {
       debugPrint("Auto-saving \"$name\" because $reason");
     } else {
       debugPrint("Saving \"$name\" because $reason");
