@@ -21,11 +21,16 @@ void main() async {
   await Prefs.init();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await WindowManager.instance.ensureInitialized();
-  windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.setTitle("$appTitle ($commit)");
-    await windowManager.maximize();
-  });
+
+  await windowManager.ensureInitialized();
+  await windowManager.waitUntilReadyToShow(
+    const WindowOptions(
+      title: "$appTitle ($commit)",
+    ),
+    () async {
+      await windowManager.maximize();
+    },
+  );
 
   runApp(const ProviderScope(child: MyApp()));
 }
