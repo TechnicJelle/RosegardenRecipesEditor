@@ -9,7 +9,7 @@ import "package:intl/intl.dart";
 import "models/recipe.dart";
 import "prefs.dart";
 
-final projectPathProvider = Provider((ref) => Directory(prefs.getString("project_path") ?? ""));
+final projectPathProvider = Provider((ref) => Directory(Prefs.instance.projectPath ?? ""));
 
 final openRecipeProvider = StateProvider<Recipe?>((ref) => null);
 

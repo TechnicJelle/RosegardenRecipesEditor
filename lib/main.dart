@@ -4,7 +4,6 @@ import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:multi_split_view/multi_split_view.dart";
-import "package:shared_preferences/shared_preferences.dart";
 import "package:window_manager/window_manager.dart";
 
 import "git/commit_dialog.dart";
@@ -20,7 +19,7 @@ const String appTitle = "Rosegarden Recipes Editor";
 const String commit = String.fromEnvironment("commit", defaultValue: "local");
 
 void main() async {
-  prefs = await SharedPreferences.getInstance();
+  await Prefs.init();
 
   WidgetsFlutterBinding.ensureInitialized();
   await WindowManager.instance.ensureInitialized();
@@ -82,7 +81,7 @@ class MyHomePage extends ConsumerWidget {
                   String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
                   if (selectedDirectory == null) return; // User canceled the picker
 
-                  prefs.setString("project_path", selectedDirectory);
+                  Prefs.instance.projectPath = selectedDirectory;
                   ref.invalidate(projectPathProvider);
                 },
                 child: const Text("Set project path"),
