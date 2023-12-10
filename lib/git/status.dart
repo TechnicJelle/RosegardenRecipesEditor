@@ -49,7 +49,9 @@ class _GitStatusState extends ConsumerState<GitStatus> {
   }
 
   Future<void> _updateLog() async {
-    final Directory projectPath = ref.watch(projectPathProvider);
+    final Directory? projectPath = ref.watch(projectPathProvider);
+    if (projectPath == null) return;
+
     List<String> log = [];
 
     await _runGitCommand(["add", "--all", "--verbose"], projectPath, null); // No need to log this

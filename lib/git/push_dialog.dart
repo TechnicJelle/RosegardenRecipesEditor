@@ -39,11 +39,14 @@ class _GitPushDialogState extends ConsumerState<GitPushDialog> {
     }
 
     Future<void> runGitCommand(List<String> args) async {
+      final Directory? projectPath = ref.read(projectPathProvider);
+      if (projectPath == null) return;
+
       debugPrint("\$ git ${args.join(" ")}");
       Process.start(
         "git",
         args,
-        workingDirectory: ref.read(projectPathProvider).path,
+        workingDirectory: projectPath.path,
       ).then((process) async {
         var stdout = process.stdout.transform(utf8.decoder).listen((str) {
           _permanentStreamController.add(str);

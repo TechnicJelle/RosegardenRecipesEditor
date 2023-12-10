@@ -52,28 +52,51 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Directory projectPath = ref.watch(projectPathProvider);
+    final Directory? projectPath = ref.watch(projectPathProvider);
     final Recipe? openRecipe = ref.watch(openRecipeProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          const GitRefreshStatus(),
-          IconButton(
-            icon: const Icon(Icons.upload),
-            onPressed: () async {
-              showDialog(context: context, builder: (context) => const GitCommitDialog());
-            },
-          ),
-          if (openRecipe != null)
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: () => openRecipe.save(isAutoSave: false, reason: "save button clicked"),
-            ),
-        ],
+        actions: projectPath == null
+            ? null
+            : [
+                const GitRefreshStatus(),
+                IconButton(
+                  tooltip: "Commit changes",
+                  icon: const Icon(Icons.upload),
+                  onPressed: () async {
+                    showDialog(context: context, builder: (context) => const GitCommitDialog());
+                  },
+                ),
+                IconButton(
+                  tooltip: "Save current recipe",
+                  icon: const Icon(Icons.save),
+                  onPressed: openRecipe == null
+                      ? null
+                      : () => openRecipe.save(isAutoSave: false, reason: "save button clicked"),
+                ),
+                PopupMenuButton(
+                  tooltip: "Extra options",
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: const Row(
+                        children: [
+                          Icon(Icons.folder_delete, color: Colors.black54),
+                          SizedBox(width: 8),
+                          Text("Clear project path"),
+                        ],
+                      ),
+                      onTap: () {
+                        Prefs.instance.projectPath = null;
+                        ref.invalidate(projectPathProvider);
+                      },
+                    ),
+                  ],
+                )
+              ],
       ),
-      body: projectPath.path.isEmpty
+      body: projectPath == null
           ? const ProjectPathPickerButton()
           : openRecipe == null
               ? const RecipesList()

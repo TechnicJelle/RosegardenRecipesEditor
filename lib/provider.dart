@@ -9,7 +9,14 @@ import "package:intl/intl.dart";
 import "models/recipe.dart";
 import "prefs.dart";
 
-final projectPathProvider = Provider((ref) => Directory(Prefs.instance.projectPath ?? ""));
+final projectPathProvider = Provider((ref) {
+  final String? projectPath = Prefs.instance.projectPath;
+  if (projectPath == null) {
+    return null;
+  } else {
+    return Directory(projectPath);
+  }
+});
 
 final openRecipeProvider = StateProvider<Recipe?>((ref) => null);
 
@@ -22,14 +29,15 @@ final lastAddedTagFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
 Timer? _gitRefresherTimer;
 final gitRefresher = StreamProvider<String>((ref) {
   final streamController = StreamController<String>();
-  final directory = ref.watch(projectPathProvider);
+  final Directory? projectPath = ref.watch(projectPathProvider);
+  if (projectPath == null) return const Stream.empty();
 
   void pull() async {
     debugPrint("\$ git pull --rebase --autostash");
     var process = await Process.start(
       "git",
       ["pull", "--rebase", "--autostash"],
-      workingDirectory: directory.path,
+      workingDirectory: projectPath.path,
     );
     process.stdout.transform(utf8.decoder).listen((data) {
       DateFormat formatter = DateFormat(DateFormat.HOUR24_MINUTE_SECOND);

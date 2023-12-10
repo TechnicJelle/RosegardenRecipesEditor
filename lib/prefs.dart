@@ -24,6 +24,7 @@ class Prefs {
   // Getters and Setters
   String? get projectPath => _prefs.getString(projectPathKey);
 
+  /// Set the project path. If `null`, the project path will be cleared.
   set projectPath(String? value) {
     if (value == null) {
       _prefs.remove(projectPathKey);

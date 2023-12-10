@@ -36,7 +36,9 @@ class _RecipesListState extends ConsumerState<RecipesList> {
       Navigator.pop(context);
       popped = true;
 
-      final Directory projectPath = ref.read(projectPathProvider);
+      final Directory? projectPath = ref.read(projectPathProvider);
+      if (projectPath == null) return;
+
       final String cleanName = cleanRecipeName(newRecipeName);
       final newRecipeDir = Directory("${projectPath.path}${Platform.pathSeparator}$cleanName");
       newRecipeDir.createSync();
@@ -69,7 +71,9 @@ class _RecipesListState extends ConsumerState<RecipesList> {
 
               final String cleanName = cleanRecipeName(recipeName);
 
-              final Directory projectPath = ref.read(projectPathProvider);
+              final Directory? projectPath = ref.read(projectPathProvider);
+              if (projectPath == null) return "Please select a project path";
+
               final contents = projectPath.listSync(recursive: false).whereType<Directory>();
 
               if (contents.any((dir) => dir.name == cleanName)) {
@@ -95,7 +99,12 @@ class _RecipesListState extends ConsumerState<RecipesList> {
 
   @override
   Widget build(BuildContext context) {
-    final Directory projectPath = ref.watch(projectPathProvider);
+    final Directory? projectPath = ref.watch(projectPathProvider);
+    if (projectPath == null) {
+      return const Center(
+        child: Text("Please select a project path"),
+      );
+    }
 
     return Column(
       // mainAxisSize: MainAxisSize.max,
