@@ -37,7 +37,7 @@ class _GitPushDialogState extends ConsumerState<GitPushDialog> {
     }
 
     Future<void> runGitCommand(List<String> args) async {
-      print("\$ git ${args.join(" ")}");
+      debugPrint("\$ git ${args.join(" ")}");
       Process.start(
         "git",
         args,

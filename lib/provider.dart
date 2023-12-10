@@ -23,7 +23,7 @@ final gitRefresher = StreamProvider<String>((ref) {
   final directory = ref.watch(projectPathProvider);
 
   void pull() async {
-    print("\$ git pull --rebase --autostash");
+    debugPrint("\$ git pull --rebase --autostash");
     var process = await Process.start(
       "git",
       ["pull", "--rebase", "--autostash"],

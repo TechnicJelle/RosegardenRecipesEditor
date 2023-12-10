@@ -40,7 +40,8 @@ class Recipe {
     this.tags,
   );
 
-  static const bool fromFileDebugPrint = false;
+  // ignore: dead_code
+  static const bool fromFileDebugPrint = kDebugMode && false;
 
   static Recipe fromDirectory(Directory directory) {
     final file = File("${directory.path}${Platform.pathSeparator}recipe.md");
