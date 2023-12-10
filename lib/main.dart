@@ -31,7 +31,24 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
     await windowManager.maximize();
-    Timer(const Duration(seconds: 1), () => windowManager.maximize());
+
+    // Sledgehammer to make sure the window really is maximized.
+    // Thanks, Windows.
+    Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+      windowManager.maximize();
+      if (await windowManager.isMaximized()) {
+        timer.cancel();
+        debugPrint("Timer cancelled due to successful maximization after ${timer.tick} ticks");
+        return;
+      }
+
+      const maxTicks = 20;
+      if (timer.tick == maxTicks) {
+        timer.cancel();
+        debugPrint("Timer cancelled after $maxTicks ticks");
+        return;
+      }
+    });
   });
 
   runApp(const ProviderScope(child: MyApp()));
