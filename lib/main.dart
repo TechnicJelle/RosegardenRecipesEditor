@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:io";
 
 import "package:flutter/material.dart";
@@ -30,6 +31,7 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
     await windowManager.maximize();
+    Timer(const Duration(seconds: 1), () => windowManager.maximize());
   });
 
   runApp(const ProviderScope(child: MyApp()));
@@ -67,11 +69,6 @@ class MyHomePage extends ConsumerWidget {
             ? null
             : [
                 const GitRefreshStatus(),
-                IconButton(
-                  tooltip: "Maximize window",
-                  icon: const Icon(Icons.window),
-                  onPressed: () => windowManager.maximize(),
-                ),
                 IconButton(
                   tooltip: "Commit changes",
                   icon: const Icon(Icons.upload),
