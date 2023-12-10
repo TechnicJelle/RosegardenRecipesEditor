@@ -1,15 +1,14 @@
 import "dart:io";
 
-import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:multi_split_view/multi_split_view.dart";
 import "package:window_manager/window_manager.dart";
 
+import "components/path_picker_button.dart";
 import "git/commit_dialog.dart";
 import "git/refresh_status.dart";
 import "models/recipe.dart";
-import "pages/recipe_view.dart";
+import "pages/dual_pane.dart";
 import "pages/recipes_list.dart";
 import "prefs.dart";
 import "provider.dart";
@@ -75,43 +74,10 @@ class MyHomePage extends ConsumerWidget {
         ],
       ),
       body: projectPath.path.isEmpty
-          ? Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-                  if (selectedDirectory == null) return; // User canceled the picker
-
-                  Prefs.instance.projectPath = selectedDirectory;
-                  ref.invalidate(projectPathProvider);
-                },
-                child: const Text("Set project path"),
-              ),
-            )
-          : MultiSplitViewTheme(
-              data: MultiSplitViewThemeData(
-                dividerPainter: DividerPainters.grooved1(
-                  //TODO: See if I can make this less hacky. Use double.infinity, or other properties?
-                  size: 9999,
-                  highlightedSize: 9999,
-                ),
-              ),
-              child: MultiSplitView(
-                axis: Axis.horizontal,
-                //TODO: creating a Controller in the Build method? very bad.
-                controller: MultiSplitViewController(
-                  areas: [
-                    Area(
-                      minimalSize: 200,
-                      weight: 0,
-                    ),
-                  ],
-                ),
-                children: [
-                  const ExcludeFocus(child: RecipesList()),
-                  if (openRecipe != null) RecipeView(recipe: openRecipe, key: ValueKey(openRecipe)),
-                ],
-              ),
-            ),
+          ? const ProjectPathPickerButton()
+          : openRecipe == null
+              ? const RecipesList()
+              : const DualPane(),
     );
   }
 }

@@ -66,6 +66,11 @@ class Recipe {
     );
   }
 
+  @override
+  String toString() {
+    return "Recipe(name: \"$name\")";
+  }
+
   // ignore: dead_code
   static const bool fromFileDebugPrint = kDebugMode && false;
 
