@@ -24,65 +24,6 @@ class _RecipesListState extends ConsumerState<RecipesList> {
     _scrollController.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final Directory projectPath = ref.watch(projectPathProvider);
-
-    return Column(
-      // mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.add),
-              label: const Text("New Recipe"),
-              onPressed: () => _newRecipePopup(context),
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all(const EdgeInsets.all(16)),
-                backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: StreamBuilder(
-            stream: projectPath.watch(),
-            builder: (context, _) {
-              final List<Directory> contents = projectPath
-                  .listSync(recursive: false)
-                  .whereType<Directory>()
-                  .where((dir) => !dir.name.startsWith(RegExp(r"[!._]")))
-                  .toList();
-
-              contents.sort((a, b) => compareNatural(a.name, b.name));
-
-              return Scrollbar(
-                controller: _scrollController,
-                thumbVisibility: true,
-                trackVisibility: true,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: false,
-                  itemCount: contents.length,
-                  itemBuilder: (context, index) {
-                    final Directory recipeDir = contents[index];
-                    return ListTile(
-                      title: Text(prettifyRecipeName(recipeDir.name)),
-                      onTap: () => ref.read(openRecipeProvider.notifier).state = Recipe.fromDirectory(recipeDir),
-                      selected: ref.watch(openRecipeProvider)?.file.parent.path == recipeDir.path,
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
   void _newRecipePopup(BuildContext context) {
     String newRecipeName = "";
     bool popped = false; // Prevents the validator from running after the dialog is popped
@@ -149,6 +90,65 @@ class _RecipesListState extends ConsumerState<RecipesList> {
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Directory projectPath = ref.watch(projectPathProvider);
+
+    return Column(
+      // mainAxisSize: MainAxisSize.max,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.add),
+              label: const Text("New Recipe"),
+              onPressed: () => _newRecipePopup(context),
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all(const EdgeInsets.all(16)),
+                backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: StreamBuilder(
+            stream: projectPath.watch(),
+            builder: (context, _) {
+              final List<Directory> contents = projectPath
+                  .listSync(recursive: false)
+                  .whereType<Directory>()
+                  .where((dir) => !dir.name.startsWith(RegExp(r"[!._]")))
+                  .toList();
+
+              contents.sort((a, b) => compareNatural(a.name, b.name));
+
+              return Scrollbar(
+                controller: _scrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: false,
+                  itemCount: contents.length,
+                  itemBuilder: (context, index) {
+                    final Directory recipeDir = contents[index];
+                    return ListTile(
+                      title: Text(prettifyRecipeName(recipeDir.name)),
+                      onTap: () => ref.read(openRecipeProvider.notifier).state = Recipe.fromDirectory(recipeDir),
+                      selected: ref.watch(openRecipeProvider)?.file.parent.path == recipeDir.path,
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -26,24 +26,26 @@ class _GitStatusState extends ConsumerState<GitStatus> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _updateLog());
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final bool gitAnyChanges = ref.watch(gitAnyChangesProvider);
+  Future<void> _runGitCommand(
+    List<String> arguments,
+    Directory workingDirectory,
+    List<String>? log,
+  ) async {
+    debugPrint("\$ git ${arguments.join(" ")}");
+    var process = await Process.start("git", arguments, workingDirectory: workingDirectory.path);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (!gitAnyChanges)
-          const Text("No changes to commit")
-        else
-          for (var line in log)
-            if (line.startsWith("error: "))
-              Text(line.replaceFirst("error: ", ""), style: const TextStyle(color: Colors.red))
-            else
-              Text(line),
-      ],
-    );
+    var stdout = process.stdout.transform(utf8.decoder).listen((String data) {
+      log?.add(data.trimRight());
+    });
+    var stderr = process.stderr.transform(utf8.decoder).listen((String data) {
+      log?.add("error: ${data.trimRight()}");
+    });
+
+    await Future.wait([
+      process.exitCode,
+      stdout.asFuture(),
+      stderr.asFuture(),
+    ]);
   }
 
   Future<void> _updateLog() async {
@@ -95,26 +97,24 @@ class _GitStatusState extends ConsumerState<GitStatus> {
 
     ref.read(gitAnyChangesProvider.notifier).state = log.isNotEmpty;
   }
-}
 
-Future<void> _runGitCommand(
-  List<String> arguments,
-  Directory workingDirectory,
-  List<String>? log,
-) async {
-  debugPrint("\$ git ${arguments.join(" ")}");
-  var process = await Process.start("git", arguments, workingDirectory: workingDirectory.path);
+  @override
+  Widget build(BuildContext context) {
+    final bool gitAnyChanges = ref.watch(gitAnyChangesProvider);
 
-  var stdout = process.stdout.transform(utf8.decoder).listen((String data) {
-    log?.add(data.trimRight());
-  });
-  var stderr = process.stderr.transform(utf8.decoder).listen((String data) {
-    log?.add("error: ${data.trimRight()}");
-  });
-
-  await Future.wait([
-    process.exitCode,
-    stdout.asFuture(),
-    stderr.asFuture(),
-  ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (!gitAnyChanges)
+          const Text("No changes to commit")
+        else
+          for (var line in log)
+            if (line.startsWith("error: "))
+              Text(line.replaceFirst("error: ", ""), style: const TextStyle(color: Colors.red))
+            else
+              Text(line),
+      ],
+    );
+  }
 }
