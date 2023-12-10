@@ -87,6 +87,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                   }
 
                   return ListEntry(
+                    //TODO: UniqueKey that is not saved anywhere? very bad.
                     key: UniqueKey(),
                     index: index,
                     trackedList: recipe.ingredients,
@@ -130,6 +131,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                   }
 
                   return ListEntry(
+                    //TODO: UniqueKey that is not saved anywhere? very bad.
                     key: UniqueKey(),
                     index: index,
                     trackedList: recipe.directions,

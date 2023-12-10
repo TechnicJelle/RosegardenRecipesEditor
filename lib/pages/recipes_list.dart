@@ -117,8 +117,10 @@ class _RecipesListState extends ConsumerState<RecipesList> {
         ),
         Expanded(
           child: StreamBuilder(
+            //TODO: recreating a stream in the build method? bad
             stream: projectPath.watch(),
             builder: (context, _) {
+              //TODO: reading the file system in the build method? extremely bad.
               final List<Directory> contents = projectPath
                   .listSync(recursive: false)
                   .whereType<Directory>()

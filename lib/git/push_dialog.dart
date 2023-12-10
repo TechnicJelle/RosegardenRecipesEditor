@@ -7,6 +7,8 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../provider.dart";
 
+//TODO: it doesn't make much sense to create a stream that you use only in a provider: use an AsyncNotifier
+//then you publish by updating state, and consume with ref.watch
 final _permanentStreamController = StreamController<String>();
 final _streamProvider = StreamProvider<String>((ref) => _permanentStreamController.stream);
 

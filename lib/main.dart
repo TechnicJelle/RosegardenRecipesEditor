@@ -90,12 +90,14 @@ class MyHomePage extends ConsumerWidget {
           : MultiSplitViewTheme(
               data: MultiSplitViewThemeData(
                 dividerPainter: DividerPainters.grooved1(
+                  //TODO: See if I can make this less hacky. Use double.infinity, or other properties?
                   size: 9999,
                   highlightedSize: 9999,
                 ),
               ),
               child: MultiSplitView(
                 axis: Axis.horizontal,
+                //TODO: creating a Controller in the Build method? very bad.
                 controller: MultiSplitViewController(
                   areas: [
                     Area(

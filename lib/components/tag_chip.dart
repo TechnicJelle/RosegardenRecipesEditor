@@ -15,6 +15,8 @@ class TagChip extends StatefulWidget {
     this.focusNode,
   }) : super(key: UniqueKey());
 
+  //TODO: UniqueKey in super? very bad
+
   @override
   State<TagChip> createState() => _TagChipState();
 }

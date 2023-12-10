@@ -13,10 +13,12 @@ final projectPathProvider = Provider((ref) => Directory(Prefs.instance.projectPa
 
 final openRecipeProvider = StateProvider<Recipe?>((ref) => null);
 
+//TODO: FocusNodes in Providers? no good
 final lastAddedIngredientFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
 final lastAddedDirectionFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
 final lastAddedTagFocusNodeProvider = Provider<FocusNode>((ref) => FocusNode());
 
+//TODO: global mutable variable that's used inside a Provider? also no good
 Timer? _gitRefresherTimer;
 final gitRefresher = StreamProvider<String>((ref) {
   final streamController = StreamController<String>();
