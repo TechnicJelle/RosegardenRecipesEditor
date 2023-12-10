@@ -3,17 +3,17 @@ import "dart:io";
 import "package:flutter/foundation.dart";
 
 class Recipe {
-  File file;
-  String name;
-  String intro;
-  String prepTime;
-  String waitTime;
-  String cookTime;
-  String servings;
-  List<String> ingredients;
-  List<String> directions;
-  String recipeSource;
-  List<String> tags;
+  final File file;
+  final String name;
+  final String intro;
+  final String prepTime;
+  final String waitTime;
+  final String cookTime;
+  final String servings;
+  final List<String> ingredients;
+  final List<String> directions;
+  final String recipeSource;
+  final List<String> tags;
 
   Recipe.empty(this.file, this.name)
       : intro = "",
@@ -26,19 +26,45 @@ class Recipe {
         recipeSource = "",
         tags = [];
 
-  Recipe(
-    this.file,
-    this.name,
-    this.intro,
-    this.prepTime,
-    this.waitTime,
-    this.cookTime,
-    this.servings,
-    this.ingredients,
-    this.directions,
-    this.recipeSource,
-    this.tags,
-  );
+  const Recipe._({
+    required this.file,
+    required this.name,
+    required this.intro,
+    required this.prepTime,
+    required this.waitTime,
+    required this.cookTime,
+    required this.servings,
+    required this.ingredients,
+    required this.directions,
+    required this.recipeSource,
+    required this.tags,
+  });
+
+  Recipe copyWith({
+    String? intro,
+    String? prepTime,
+    String? waitTime,
+    String? cookTime,
+    String? servings,
+    List<String>? ingredients,
+    List<String>? directions,
+    String? recipeSource,
+    List<String>? tags,
+  }) {
+    return Recipe._(
+      file: file,
+      name: name,
+      intro: intro ?? this.intro,
+      prepTime: prepTime ?? this.prepTime,
+      waitTime: waitTime ?? this.waitTime,
+      cookTime: cookTime ?? this.cookTime,
+      servings: servings ?? this.servings,
+      ingredients: ingredients ?? this.ingredients,
+      directions: directions ?? this.directions,
+      recipeSource: recipeSource ?? this.recipeSource,
+      tags: tags ?? this.tags,
+    );
+  }
 
   // ignore: dead_code
   static const bool fromFileDebugPrint = kDebugMode && false;
@@ -97,18 +123,18 @@ class Recipe {
     List<String> tags = tagsContent.split(" ").map((tag) => tag.trim()).where((str) => str.isNotEmpty).toList();
     if (fromFileDebugPrint) debugPrint("Tags (${tags.length}):\n$tagsContent");
 
-    return Recipe(
-      file,
-      name,
-      intro,
-      prepTime,
-      waitTime,
-      cookTime,
-      servings,
-      ingredients,
-      directions,
-      recipeSource,
-      tags,
+    return Recipe._(
+      file: file,
+      name: name,
+      intro: intro,
+      prepTime: prepTime,
+      waitTime: waitTime,
+      cookTime: cookTime,
+      servings: servings,
+      ingredients: ingredients,
+      directions: directions,
+      recipeSource: recipeSource,
+      tags: tags,
     );
   }
 

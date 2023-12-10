@@ -22,15 +22,20 @@ class RecipeView extends ConsumerStatefulWidget {
 }
 
 class _RecipeViewState extends ConsumerState<RecipeView> {
+  late Recipe recipe;
+
   final _scrollController = ScrollController();
   late final Timer autoSaveTimer;
 
   @override
   void initState() {
     super.initState();
+
+    recipe = widget.recipe;
+
     const int seconds = 15;
     autoSaveTimer = Timer.periodic(const Duration(seconds: seconds), (timer) {
-      widget.recipe.save(autoSave: true, "timer $seconds seconds");
+      recipe.save(autoSave: true, "timer $seconds seconds");
     });
   }
 
@@ -39,7 +44,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
     super.dispose();
     autoSaveTimer.cancel();
     _scrollController.dispose();
-    widget.recipe.save(autoSave: true, "close");
+    recipe.save(autoSave: true, "close");
   }
 
   @override
@@ -55,15 +60,14 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
           slivers: [
             SliverList.list(
               children: [
-                Text(widget.recipe.name, style: Theme.of(context).textTheme.headlineLarge),
+                Text(recipe.name, style: Theme.of(context).textTheme.headlineLarge),
                 MyTextField(
-                  // key: ValueKey("${widget.recipe.name} description"),
                   hintText: "Enter recipe description here",
-                  startText: widget.recipe.intro,
-                  onChanged: (value) => widget.recipe.intro = value,
+                  startText: recipe.intro,
+                  onChanged: (value) => setState(() => recipe = recipe.copyWith(intro: value)),
                 ),
                 const SizedBox(height: 16),
-                Stats(recipe: widget.recipe),
+                Stats(recipe: recipe),
                 const SizedBox(height: 16),
                 Text("Ingredients", style: Theme.of(context).textTheme.titleLarge),
               ],
@@ -71,11 +75,11 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
             ReorderableSliverList(
               controller: _scrollController,
               delegate: ReorderableSliverChildBuilderDelegate(
-                childCount: widget.recipe.ingredients.length + 1,
+                childCount: recipe.ingredients.length + 1,
                 (context, index) {
-                  if (index == widget.recipe.ingredients.length) {
+                  if (index == recipe.ingredients.length) {
                     return AddButton(
-                      trackedList: widget.recipe.ingredients,
+                      trackedList: recipe.ingredients,
                       parentSetState: setState,
                       hintText: "Add ingredient",
                       focusNode: ref.watch(lastAddedIngredientFocusNodeProvider),
@@ -85,7 +89,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                   return ListEntry(
                     key: UniqueKey(),
                     index: index,
-                    trackedList: widget.recipe.ingredients,
+                    trackedList: recipe.ingredients,
                     hintText: "List an ingredient",
                     isOrdered: false,
                     parentSetState: setState,
@@ -95,13 +99,13 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
               ),
               onReorder: (oldIndex, newIndex) {
                 // Prevent reordering the "Add ingredient" button
-                if (oldIndex >= widget.recipe.ingredients.length || newIndex >= widget.recipe.ingredients.length) {
+                if (oldIndex >= recipe.ingredients.length || newIndex >= recipe.ingredients.length) {
                   return;
                 }
 
                 setState(() {
-                  final item = widget.recipe.ingredients.removeAt(oldIndex);
-                  widget.recipe.ingredients.insert(newIndex, item);
+                  final item = recipe.ingredients.removeAt(oldIndex);
+                  recipe.ingredients.insert(newIndex, item);
                 });
               },
             ),
@@ -114,11 +118,11 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
             ReorderableSliverList(
               controller: _scrollController,
               delegate: ReorderableSliverChildBuilderDelegate(
-                childCount: widget.recipe.directions.length + 1,
+                childCount: recipe.directions.length + 1,
                 (context, index) {
-                  if (index == widget.recipe.directions.length) {
+                  if (index == recipe.directions.length) {
                     return AddButton(
-                      trackedList: widget.recipe.directions,
+                      trackedList: recipe.directions,
                       parentSetState: setState,
                       hintText: "Add direction",
                       focusNode: ref.watch(lastAddedDirectionFocusNodeProvider),
@@ -128,7 +132,7 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                   return ListEntry(
                     key: UniqueKey(),
                     index: index,
-                    trackedList: widget.recipe.directions,
+                    trackedList: recipe.directions,
                     hintText: "Explain a step of the process",
                     isOrdered: true,
                     parentSetState: setState,
@@ -138,13 +142,13 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
               ),
               onReorder: (oldIndex, newIndex) {
                 // Prevent reordering the "Add direction" button
-                if (oldIndex >= widget.recipe.directions.length || newIndex >= widget.recipe.directions.length) {
+                if (oldIndex >= recipe.directions.length || newIndex >= recipe.directions.length) {
                   return;
                 }
 
                 setState(() {
-                  final item = widget.recipe.directions.removeAt(oldIndex);
-                  widget.recipe.directions.insert(newIndex, item);
+                  final item = recipe.directions.removeAt(oldIndex);
+                  recipe.directions.insert(newIndex, item);
                 });
               },
             ),
@@ -153,10 +157,9 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                 const SizedBox(height: 16),
                 Text("Recipe source", style: Theme.of(context).textTheme.titleLarge),
                 MyTextField(
-                  // key: ValueKey("${widget.recipe.name} recipe source"),
                   hintText: "Where did you find this recipe? How did you create it?",
-                  startText: widget.recipe.recipeSource,
-                  onChanged: (value) => widget.recipe.recipeSource = value,
+                  startText: recipe.recipeSource,
+                  onChanged: (value) => setState(() => recipe = recipe.copyWith(recipeSource: value)),
                 ),
                 const SizedBox(height: 16),
                 Text("Tags/Categories", style: Theme.of(context).textTheme.titleLarge),
@@ -181,28 +184,28 @@ class _RecipeViewState extends ConsumerState<RecipeView> {
                   runSpacing: 8,
                   onReorder: (int oldIndex, int newIndex) {
                     // Prevent reordering the "Add tag" chip
-                    if (oldIndex >= widget.recipe.tags.length || newIndex >= widget.recipe.tags.length) return;
+                    if (oldIndex >= recipe.tags.length || newIndex >= recipe.tags.length) return;
 
                     setState(() {
-                      final item = widget.recipe.tags.removeAt(oldIndex);
-                      widget.recipe.tags.insert(newIndex, item);
+                      final item = recipe.tags.removeAt(oldIndex);
+                      recipe.tags.insert(newIndex, item);
                     });
                   },
                   children: [
-                    for (int i = 0; i < widget.recipe.tags.length; i++)
+                    for (int i = 0; i < recipe.tags.length; i++)
                       TagChip(
                         hintText: "tag",
-                        startText: widget.recipe.tags[i],
-                        onChanged: (value) => widget.recipe.tags[i] = value,
-                        onDeleted: () => setState(() => widget.recipe.tags.removeAt(i)),
-                        focusNode: i == widget.recipe.tags.length - 1 ? ref.watch(lastAddedTagFocusNodeProvider) : null,
+                        startText: recipe.tags[i],
+                        onChanged: (value) => recipe.tags[i] = value,
+                        onDeleted: () => setState(() => recipe.tags.removeAt(i)),
+                        focusNode: i == recipe.tags.length - 1 ? ref.watch(lastAddedTagFocusNodeProvider) : null,
                       ),
                     ActionChip(
                       label: const Text("Add tag"),
                       avatar: const Icon(Icons.add),
                       tooltip: "Add tag",
                       onPressed: () {
-                        setState(() => widget.recipe.tags.add(""));
+                        setState(() => recipe.tags.add(""));
                         Timer(const Duration(milliseconds: 100), () {
                           ref.read(lastAddedTagFocusNodeProvider).requestFocus();
                         });
