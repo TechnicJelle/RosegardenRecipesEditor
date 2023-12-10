@@ -23,12 +23,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await windowManager.ensureInitialized();
-  await windowManager.waitUntilReadyToShow(
+  windowManager.waitUntilReadyToShow(
     const WindowOptions(
       title: "$appTitle ($commit)",
     ),
-    () async {
-      await windowManager.maximize();
+    () {
+      windowManager.maximize();
     },
   );
 
@@ -67,6 +67,11 @@ class MyHomePage extends ConsumerWidget {
             ? null
             : [
                 const GitRefreshStatus(),
+                IconButton(
+                  tooltip: "Maximize window",
+                  icon: const Icon(Icons.window),
+                  onPressed: () => windowManager.maximize(),
+                ),
                 IconButton(
                   tooltip: "Commit changes",
                   icon: const Icon(Icons.upload),
